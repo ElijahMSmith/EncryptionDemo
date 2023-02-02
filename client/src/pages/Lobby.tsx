@@ -3,16 +3,17 @@ import { io, Socket } from "socket.io-client";
 import "./Lobby.css";
 
 export function Lobby({
+	code,
+	setCode,
 	setConnection,
 }: {
+	code: string;
+	setCode: (arg0: string) => void;
 	setConnection: (arg0: Socket | null) => void;
 }) {
-	const [code, setCode] = useState("");
-
 	function startGame() {
 		const socket = io();
-		// TODO: send event to connect to the provided code
-
+		socket.emit("join", code);
 		setConnection(socket);
 	}
 

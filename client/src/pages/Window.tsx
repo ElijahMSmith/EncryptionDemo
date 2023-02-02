@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import "./Window.css";
 
-type Message = {
+type ServerMessage = {
 	time: string;
 	text: string;
 	id: number;
-	fromMe: boolean;
 };
+
+type ClientMessage = ServerMessage & { fromMe: boolean };
 
 class Enumerator {
 	count: number;
@@ -26,22 +27,38 @@ const generator = new Enumerator();
 export function Window({
 	connection,
 	setConnection,
+	code,
+	setCode,
 }: {
 	connection: Socket;
 	setConnection: (arg0: Socket | null) => void;
+	code: string;
+	setCode: (arg0: string) => void;
 }) {
 	const [activeMessage, setActiveMessage] = useState("");
-	const [messageHistory, setMessageHistory] = useState<Message[]>([]);
+	const [messageHistory, setMessageHistory] = useState<ClientMessage[]>([]);
 
 	useEffect(() => {
-		connection.on("disconnect", () => {});
-		connection.on("receiveMessage", () => {});
+		connection.on("disconnect", () => {
+			setConnection(null);
+			setCode("");
+		});
+
+		connection.on(
+			"forwardMessage",
+			(message: ServerMessage, senderId: string) => {
+				messageHistory.push({
+					...message,
+					fromMe: senderId === connection.id,
+				});
+			}
+		);
 
 		return () => {
 			connection.off("disconnect");
-			connection.off("receiveMessage");
+			connection.off("forwardMessage");
 		};
-	}, []);
+	}, [connection]);
 
 	useEffect(() => {
 		setMessageHistory([
@@ -62,7 +79,7 @@ export function Window({
 
 	function sendMessage() {
 		if (activeMessage === "") return;
-		connection.emit(activeMessage);
+		connection.emit("newMessage", activeMessage, connection);
 		setActiveMessage("");
 	}
 

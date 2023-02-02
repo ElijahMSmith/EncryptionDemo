@@ -5,11 +5,17 @@ import { Socket } from "socket.io-client";
 
 function App() {
 	const [connection, setConnection] = useState<null | Socket>(null);
+	const [code, setCode] = useState<string>("");
 
 	return !connection ? (
-		<Lobby setConnection={setConnection} />
+		<Lobby setConnection={setConnection} setCode={setCode} code={code} />
 	) : (
-		<Window setConnection={setConnection} connection={connection} />
+		<Window
+			setConnection={setConnection}
+			connection={connection}
+			setCode={setCode}
+			code={code}
+		/>
 	);
 }
 
