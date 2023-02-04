@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import "./Window.css";
 
@@ -65,48 +65,54 @@ export function Window({
 		};
 	}, []);
 
-	function sendMessage() {
+	function sendMessage(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 		if (activeMessage === "") return;
 		connection.emit("newMessage", activeMessage, code);
 		setActiveMessage("");
 	}
 
 	return (
-		<div id="page">
-			<div id="container">
-				<div id="messageHistory">
-					{messageHistory.map((message) => {
-						return (
-							<div
-								className={`messageBubble ${
-									message.fromMe ? "myBubble" : "notMyBubble"
-								}`}
-								key={message.id}
-							>
-								{message.fromMe ? "You\n" : ""}
-								<span className="sendTime">{message.time}</span>
-								<span className="messageContext">
-									{message.text}
-								</span>
-							</div>
-						);
-					})}
-				</div>
-				<div id="bottomBar">
-					<input
-						id="messageInput"
-						type="text"
-						value={activeMessage}
-						onChange={(e) => setActiveMessage(e.target.value)}
-					/>
-					<input
-						id="sendMessage"
-						type="button"
-						value="Send!"
-						onClick={sendMessage}
-					/>
+		<form onSubmit={sendMessage}>
+			<div id="page">
+				<div id="container">
+					<div id="messageHistory">
+						{messageHistory.map((message) => {
+							return (
+								<div
+									className={`messageBubble ${
+										message.fromMe
+											? "myBubble"
+											: "notMyBubble"
+									}`}
+									key={message.id}
+								>
+									<span className="senderName">
+										{message.fromMe ? "You\n" : ""}
+									</span>
+									<span className="sendTime">
+										{message.time}
+									</span>
+									<span className="messageContext">
+										{message.text}
+									</span>
+								</div>
+							);
+						})}
+					</div>
+					<div id="bottomBar">
+						<input
+							id="messageInput"
+							type="text"
+							value={activeMessage}
+							onChange={(e) => setActiveMessage(e.target.value)}
+						/>
+						<button id="sendMessage" type="submit">
+							Send!
+						</button>
+					</div>
 				</div>
 			</div>
-		</div>
+		</form>
 	);
 }
