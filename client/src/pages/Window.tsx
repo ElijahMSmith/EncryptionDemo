@@ -5,10 +5,9 @@ import "./Window.css";
 type ServerMessage = {
 	time: string;
 	text: string;
-	id: number;
 };
 
-type ClientMessage = ServerMessage & { fromMe: boolean };
+type ClientMessage = ServerMessage & { fromMe: boolean; id: number };
 
 class Enumerator {
 	count: number;
@@ -47,9 +46,15 @@ export function Window({
 		connection.on(
 			"forwardMessage",
 			(message: ServerMessage, senderId: string) => {
-				messageHistory.push({
-					...message,
-					fromMe: senderId === connection.id,
+				setMessageHistory((oldHistory) => {
+					return [
+						...oldHistory,
+						{
+							...message,
+							fromMe: senderId === connection.id,
+							id: generator.next(),
+						},
+					];
 				});
 			}
 		);
@@ -58,28 +63,11 @@ export function Window({
 			connection.off("disconnect");
 			connection.off("forwardMessage");
 		};
-	}, [connection]);
-
-	useEffect(() => {
-		setMessageHistory([
-			{
-				text: "Testing",
-				time: new Date().toLocaleString(),
-				id: generator.next(),
-				fromMe: true,
-			},
-			{
-				text: "Also testing",
-				time: new Date().toLocaleString(),
-				id: generator.next(),
-				fromMe: false,
-			},
-		]);
 	}, []);
 
 	function sendMessage() {
 		if (activeMessage === "") return;
-		connection.emit("newMessage", activeMessage, connection);
+		connection.emit("newMessage", activeMessage, code);
 		setActiveMessage("");
 	}
 
@@ -95,6 +83,7 @@ export function Window({
 								}`}
 								key={message.id}
 							>
+								{message.fromMe ? "You\n" : ""}
 								<span className="sendTime">{message.time}</span>
 								<span className="messageContext">
 									{message.text}
@@ -114,7 +103,7 @@ export function Window({
 						id="sendMessage"
 						type="button"
 						value="Send!"
-						onClick={() => sendMessage()}
+						onClick={sendMessage}
 					/>
 				</div>
 			</div>

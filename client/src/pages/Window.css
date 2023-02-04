@@ -18,10 +18,8 @@
 }
 
 #bottomBar {
+	width: 90%;
 	flex: 1;
-	width: 100%;
-	min-height: 50px;
-	height: max-content;
 	display: flex;
 }
 
@@ -44,17 +42,20 @@ body {
 }
 
 #messageHistory {
-	width: 100%;
 	flex: 9;
+	width: 90%;
 	margin-bottom: 20px;
 	padding: 10px 20px;
+	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	justify-content: end;
+	border-top-left-radius: 5%;
+	border-top-right-radius: 5%;
 }
 
 .messageBubble {
-	width: 70%;
+	width: 60%;
 	height: fit-content;
 	margin-top: 20px;
 	border-radius: 15%;

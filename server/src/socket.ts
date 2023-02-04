@@ -4,11 +4,15 @@ import { ServerHTTP } from ".";
 type Message = {
 	time: string;
 	text: string;
-	id: number;
 };
 
 const startSocketServer = (server: ServerHTTP) => {
-	const io = new Server(server);
+	const io = new Server(server, {
+		cors: {
+			origin: "http://localhost:3000",
+			methods: ["GET", "POST"],
+		},
+	});
 
 	io.on("connection", (socket) => {
 		console.log("Connected socket " + socket.id);
@@ -21,10 +25,18 @@ const startSocketServer = (server: ServerHTTP) => {
 
 		socket.on("join", (code) => {
 			socket.join(code);
+			console.log("join (code: " + code + ")");
 		});
 
 		socket.on("newMessage", (message, code) => {
-			io.to(code).emit("forwardMessage", message, socket.id);
+			console.log(
+				"newMessage (message: " + message + ", code: " + code + ")"
+			);
+			io.to(code).emit(
+				"forwardMessage",
+				{ time: new Date().toLocaleString(), text: message },
+				socket.id
+			);
 		});
 	});
 };

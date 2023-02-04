@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { io, Socket } from "socket.io-client";
 import "./Lobby.css";
 
@@ -12,7 +12,7 @@ export function Lobby({
 	setConnection: (arg0: Socket | null) => void;
 }) {
 	function startGame() {
-		const socket = io();
+		const socket = io("http://localhost:8080");
 		socket.emit("join", code);
 		setConnection(socket);
 	}
