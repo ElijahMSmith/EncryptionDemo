@@ -1,4 +1,4 @@
-#page {
+#lobbyPage {
 	width: 100vw;
 	height: 100vh;
 	display: flex;
@@ -6,23 +6,24 @@
 	align-items: center;
 }
 
-#container {
-	width: 500px;
-	height: 400px;
+#lobbyContainer {
+	width: 60%;
+	height: 60%;
 	display: flex;
 	flex-direction: column;
 	padding: 30px;
 	justify-content: center;
 	align-items: center;
-	border-radius: 10%;
 	background-color: #116df5;
+	border-radius: 20px;
 	box-shadow: 2px 2px 20px 10px rgb(0, 0, 0, 0.3);
 }
 
-h1 {
+#lobbyHeader {
 	margin-bottom: 40px;
 	font-size: 3em;
 	color: white;
+	text-align: center;
 }
 
 #codeInput {
@@ -31,7 +32,7 @@ h1 {
 	font-size: x-large;
 }
 
-#submit {
+#codeSubmit {
 	width: 100px;
 	height: 100px;
 	font-size: x-large;
@@ -39,4 +40,9 @@ h1 {
 
 body {
 	background-image: linear-gradient(45deg, #5100ff, #3700ff);
+}
+
+body,
+html {
+	overflow: hidden;
 }

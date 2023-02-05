@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Lobby } from "./pages/Lobby";
-import { Window } from "./pages/Window";
 import { Socket } from "socket.io-client";
+import { Lobby } from "./pages/lobby/Lobby";
+import { Window } from "./pages/windows/Window";
+import { WindowType } from "./types";
 
 function App() {
 	const [connection, setConnection] = useState<null | Socket>(null);
@@ -15,6 +16,7 @@ function App() {
 			connection={connection}
 			setCode={setCode}
 			code={code}
+			type={WindowType.NORMAL}
 		/>
 	);
 }

@@ -6,6 +6,8 @@ type Message = {
 	text: string;
 };
 
+const lobbies = {};
+
 const startSocketServer = (server: ServerHTTP) => {
 	const io = new Server(server, {
 		cors: {
@@ -24,8 +26,10 @@ const startSocketServer = (server: ServerHTTP) => {
 		});
 
 		socket.on("join", (code) => {
-			socket.join(code);
 			console.log("join (code: " + code + ")");
+
+			if (!lobbies[code]) {
+			}
 		});
 
 		socket.on("newMessage", (message, code) => {

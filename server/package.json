@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "Web socket server for chatting",
 	"scripts": {
+        "start": "npm run start-dev",
 		"start-dev": "nodemon src/index.ts"
 	},
 	"author": "Eli",
