@@ -1,6 +1,11 @@
-FROM node:18 AS build-env
-COPY server /app
+FROM node:18-slim AS build-env
+
 WORKDIR /app
+
+COPY server ./
+
+COPY client/build/ ./build/
+
 RUN npm ci
 RUN npm run build
 

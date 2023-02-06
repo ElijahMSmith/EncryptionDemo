@@ -16,7 +16,7 @@ export function Lobby({
 }) {
 	function startGame(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		const socket = io("http://localhost:8080");
+		const socket = io();
 		socket.emit("join", code, (playerNum: PlayerNumber) =>
 			setPlayerNum(playerNum)
 		);
