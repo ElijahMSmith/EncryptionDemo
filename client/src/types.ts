@@ -15,12 +15,14 @@ export enum WindowType {
 
 export const PlayerNames = ["", "Octavius", "Giggles", "Hacker Man"];
 
+export type PlayerNumber = -1 | 1 | 2 | 3;
+
 export type WindowProps = {
 	connection: Socket;
 	setConnection: (arg0: Socket | null) => void;
 	code: string;
 	setCode: (arg0: string) => void;
-	type: WindowType;
+	playerNum: PlayerNumber;
 };
 
 export type WindowRendererProps = {
@@ -28,7 +30,7 @@ export type WindowRendererProps = {
 	setActiveMessage: (arg0: string) => void;
 	sendMessage: (event: FormEvent<HTMLFormElement>) => void;
 	messageHistory: ClientMessage[];
-	playerNumber?: number;
+	playerNumber?: PlayerNumber;
 };
 
 export class Enumerator {

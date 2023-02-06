@@ -1,20 +1,25 @@
 import React, { FormEvent } from "react";
 import { io, Socket } from "socket.io-client";
+import { PlayerNumber } from "../../types";
 import "./Lobby.css";
 
 export function Lobby({
 	code,
 	setCode,
 	setConnection,
+	setPlayerNum,
 }: {
 	code: string;
 	setCode: (arg0: string) => void;
 	setConnection: (arg0: Socket | null) => void;
+	setPlayerNum: (arg0: PlayerNumber) => void;
 }) {
 	function startGame(e: FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		const socket = io("http://localhost:8080");
-		socket.emit("join", code);
+		socket.emit("join", code, (playerNum: PlayerNumber) =>
+			setPlayerNum(playerNum)
+		);
 		setConnection(socket);
 	}
 

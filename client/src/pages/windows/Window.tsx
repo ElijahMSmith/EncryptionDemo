@@ -16,7 +16,7 @@ export function Window({
 	setConnection,
 	code,
 	setCode,
-	type = WindowType.NORMAL,
+	playerNum,
 }: WindowProps) {
 	const [activeMessage, setActiveMessage] = useState("");
 	const [messageHistory, setMessageHistory] = useState<ClientMessage[]>([]);
@@ -56,7 +56,7 @@ export function Window({
 		setActiveMessage("");
 	}
 
-	return type === WindowType.HACKER ? (
+	return playerNum === 3 ? (
 		<HackerWindow
 			activeMessage={activeMessage}
 			setActiveMessage={setActiveMessage}
@@ -69,6 +69,7 @@ export function Window({
 			setActiveMessage={setActiveMessage}
 			sendMessage={sendMessage}
 			messageHistory={messageHistory}
+			playerNumber={playerNum}
 		/>
 	);
 }
