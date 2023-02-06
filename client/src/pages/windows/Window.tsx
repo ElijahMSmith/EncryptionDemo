@@ -2,9 +2,9 @@ import React, { FormEvent, useEffect, useState } from "react";
 import {
 	ClientMessage,
 	Enumerator,
+	PlayerNumber,
 	ServerMessage,
 	WindowProps,
-	WindowType,
 } from "../../types";
 import { HackerWindow } from "./HackerWindow";
 import { NormalWindow } from "./NormalWindow";
@@ -13,10 +13,10 @@ const generator = new Enumerator();
 
 export function Window({
 	connection,
-	setConnection,
 	code,
 	setCode,
 	playerNum,
+	setConnection,
 }: WindowProps) {
 	const [activeMessage, setActiveMessage] = useState("");
 	const [messageHistory, setMessageHistory] = useState<ClientMessage[]>([]);
@@ -27,21 +27,18 @@ export function Window({
 			setCode("");
 		});
 
-		connection.on(
-			"forwardMessage",
-			(message: ServerMessage, senderId: string) => {
-				setMessageHistory((oldHistory) => {
-					return [
-						...oldHistory,
-						{
-							...message,
-							fromMe: senderId === connection.id,
-							id: generator.next(),
-						},
-					];
-				});
-			}
-		);
+		connection.on("forwardMessage", (message: ServerMessage) => {
+			setMessageHistory((oldHistory) => {
+				return [
+					...oldHistory,
+					{
+						...message,
+						time: new Date().toLocaleString(),
+						id: generator.next(),
+					},
+				];
+			});
+		});
 
 		return () => {
 			connection.off("disconnect");
@@ -49,10 +46,17 @@ export function Window({
 		};
 	}, []);
 
-	function sendMessage(event: FormEvent<HTMLFormElement>) {
+	function sendMessage(
+		event: FormEvent<HTMLFormElement>,
+		playerNumOverride?: PlayerNumber
+	) {
 		event.preventDefault();
 		if (activeMessage === "") return;
-		connection.emit("newMessage", activeMessage, code);
+		const newMessage: ServerMessage = {
+			senderNumber: playerNumOverride ?? playerNum,
+			text: activeMessage,
+		};
+		connection.emit("newMessage", newMessage, code);
 		setActiveMessage("");
 	}
 

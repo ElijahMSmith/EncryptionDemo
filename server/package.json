@@ -3,7 +3,9 @@
 	"version": "1.0.0",
 	"description": "Web socket server for chatting",
 	"scripts": {
-        "start": "npm run start-dev",
+		"start": "npm run start-dev",
+		"start-prod": "node dist/src/index.js",
+		"build": "tsc --build --clean && tsc --build",
 		"start-dev": "nodemon src/index.ts"
 	},
 	"author": "Eli",

@@ -1,5 +1,8 @@
-import { WindowRendererProps } from "../../types";
+import { PlayerNames, WindowRendererProps } from "../../types";
 import "./HackerWindow.css";
+import SendIcon from "@mui/icons-material/Send";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { PlayerNumber } from "../../types";
 
 export function HackerWindow({
 	activeMessage,
@@ -7,44 +10,80 @@ export function HackerWindow({
 	sendMessage,
 	messageHistory,
 }: WindowRendererProps) {
+	const [sendingAs, setSendingAs] = useState<PlayerNumber>(1);
+
 	return (
-		<form onSubmit={sendMessage}>
-			<div id="page">
-				<div id="container">
-					<div id="messageHistory">
+		<form
+			onSubmit={(event: FormEvent<HTMLFormElement>) =>
+				sendMessage(event, sendingAs)
+			}
+		>
+			<div id="hackerWindowPage">
+				<div id="hackerContainer">
+					<div id="hackerMessageHistory">
 						{messageHistory.map((message) => {
 							return (
 								<div
-									className={`messageBubble ${
-										message.fromMe
-											? "myBubble"
-											: "notMyBubble"
+									className={`hackerMessageBubble ${
+										message.senderNumber === 1
+											? "hackerBubbleLeft"
+											: "hackerBubbleRight"
 									}`}
 									key={message.id}
 								>
-									<span className="senderName">
-										{message.fromMe ? "You\n" : ""}
+									<span className="hackerSenderName">
+										{PlayerNames[message.senderNumber]}
 									</span>
-									<span className="sendTime">
+									<span className="hackerSendTime">
 										{message.time}
 									</span>
-									<span className="messageContext">
+									<span className="hackerMessageContext">
 										{message.text}
 									</span>
 								</div>
 							);
 						})}
 					</div>
-					<div id="bottomBar">
-						<input
-							id="messageInput"
-							type="text"
-							value={activeMessage}
-							onChange={(e) => setActiveMessage(e.target.value)}
-						/>
-						<button id="sendMessage" type="submit">
-							Send!
-						</button>
+
+					<div id="divider" />
+
+					<div id="sendingBarWrapper">
+						<div id="sendingBar">
+							<h1 id="sendingAsLabel">Send As:</h1>
+							<select
+								value={sendingAs}
+								onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+									setSendingAs(
+										Number(e.target.value) as PlayerNumber
+									)
+								}
+								id="hackerSendAsSelect"
+							>
+								<option value={1} id="playerOneOption">
+									Octavius (P1)
+								</option>
+								<option value={2} id="playerTwoOption">
+									Giggles (P2)
+								</option>
+							</select>
+						</div>
+					</div>
+
+					<div id="hackerBottomBarWrapper">
+						<div id="hackerBottomBar">
+							<input
+								id="hackerMessageInput"
+								type="text"
+								autoComplete="off"
+								value={activeMessage}
+								onChange={(e) =>
+									setActiveMessage(e.target.value)
+								}
+							/>
+							<button id="hackerSendMessage" type="submit">
+								<SendIcon />
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

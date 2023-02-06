@@ -31,6 +31,7 @@ export function Lobby({
 					<input
 						id="codeInput"
 						type="text"
+						autoComplete="off"
 						value={code}
 						onChange={(event) => setCode(event.target.value)}
 					/>

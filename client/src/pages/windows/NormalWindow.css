@@ -62,6 +62,7 @@
 #normalMessageInput {
 	height: 100%;
 	flex: 7;
+	width: 80%;
 	font-size: x-large;
 	margin: 0px 10px;
 	background: none;

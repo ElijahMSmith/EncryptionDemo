@@ -9,8 +9,7 @@ enum Player {
 }
 
 type Message = {
-	from: Player;
-	time: string;
+	senderNumber: Player;
 	text: string;
 };
 
@@ -34,11 +33,21 @@ const startSocketServer = (server: ServerHTTP) => {
 			// Terminate games and disconnect all players if
 			// disconnecting socket was participating
 			console.log("Disconnecting socket " + socket.id);
-			socket.rooms.forEach((room) => socket.leave(room));
+			socket.rooms.forEach((room) => {
+				socket.leave(room);
+				const session = lobbies[room];
+				if (session) {
+					const index = session.indexOf(socket.id);
+					if (index !== -1) session.splice(index, 1, "");
+					console.log("Session after disconnecting", lobbies[room]);
+				}
+			});
 		});
 
 		socket.on("join", (code, callback) => {
 			console.log("join (code: " + code + ")");
+
+			console.log("Session before joining: ", lobbies[code]);
 
 			if (!lobbies[code]) {
 				lobbies[code] = ["", socket.id];
@@ -46,10 +55,16 @@ const startSocketServer = (server: ServerHTTP) => {
 			} else {
 				const session = lobbies[code];
 
-				if (!session[Player.P2]) {
+				if (!session[Player.P1] || session[Player.P1] === "") {
+					session[Player.P1] = socket.id;
+					callback(Player.P1);
+				} else if (!session[Player.P2 || session[Player.P2] === ""]) {
 					session[Player.P2] = socket.id;
 					callback(Player.P2);
-				} else if (!session[Player.HACKER]) {
+				} else if (
+					!session[Player.HACKER] ||
+					session[Player.HACKER] === ""
+				) {
 					session[Player.HACKER] = socket.id;
 					callback(Player.HACKER);
 				} else {
@@ -59,10 +74,20 @@ const startSocketServer = (server: ServerHTTP) => {
 			}
 
 			socket.join(code);
+			console.log("Session after joining: ", lobbies[code]);
 		});
 
-		socket.on("newMessage", (message: Message, code: string) => {
-			io.to(code).emit("forwardMessage", message, socket.id);
+		socket.on("newMessage", (incomingMessage: Message, code: string) => {
+			if (!lobbies[code]) return;
+
+			if (lobbies[code][3] === socket.id) {
+				io.to(socket.id).emit("forwardMessage", incomingMessage);
+				io.to(
+					lobbies[code][incomingMessage.senderNumber === 1 ? 2 : 1]
+				).emit("forwardMessage", incomingMessage);
+			} else {
+				io.to(code).emit("forwardMessage", incomingMessage);
+			}
 		});
 	});
 };

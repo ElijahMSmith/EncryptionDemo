@@ -15,7 +15,7 @@
 		"isolatedModules": true,
 		"noEmit": true,
 		"jsx": "react-jsx",
-		"outDir": "../server/static"
+		"outDir": "build"
 	},
-	"include": ["src"]
+	"include": ["src/*"]
 }
