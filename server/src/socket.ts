@@ -46,7 +46,7 @@ const startSocketServer = (server: ServerHTTP) => {
 
 		socket.on("join", (code, callback) => {
 			console.log("join (code: " + code + ")");
-
+			console.log("callback:", callback);
 			console.log("Session before joining: ", lobbies[code]);
 
 			if (!lobbies[code]) {

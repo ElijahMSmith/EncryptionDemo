@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Socket } from "socket.io-client";
 import { Lobby } from "./pages/lobby/Lobby";
 import { Window } from "./pages/windows/Window";
-import { PlayerNumber, WindowType } from "./types";
+import { PlayerNumber } from "./types";
 
 function App() {
 	const [connection, setConnection] = useState<null | Socket>(null);

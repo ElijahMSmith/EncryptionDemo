@@ -33,7 +33,7 @@
 	overflow-y: scroll;
 	display: flex;
 	flex-direction: column;
-	justify-content: end;
+	justify-content: flex-end;
 	margin-bottom: 10px;
 }
 

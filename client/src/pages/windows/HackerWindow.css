@@ -1,3 +1,10 @@
+body,
+html {
+	margin: 0;
+	overflow: hidden;
+	height: 100%;
+}
+
 #hackerWindowPage {
 	width: 100vw;
 	height: 100vh;
@@ -6,6 +13,7 @@
 	justify-content: center;
 	align-items: center;
 	background: black;
+	overflow: hidden;
 }
 
 #hackerContainer {
@@ -15,6 +23,7 @@
 	border-radius: 5%/2%;
 	overflow: hidden;
 	border: 2px solid darkgreen;
+	z-index: 1;
 }
 
 #hackerMessageHistory {
@@ -23,7 +32,7 @@
 	overflow-y: scroll;
 	display: flex;
 	flex-direction: column;
-	justify-content: end;
+	justify-content: flex-end;
 	margin-bottom: 10px;
 }
 
@@ -142,4 +151,12 @@
 #divider {
 	border: 1px solid white;
 	margin: 15px;
+}
+
+.digit {
+	color: #3fd902;
+	font-size: 2rem;
+	position: absolute;
+	font-weight: bold;
+	z-index: 0;
 }
