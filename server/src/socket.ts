@@ -58,7 +58,7 @@ const startSocketServer = (server: ServerHTTP) => {
 				if (!session[Player.P1] || session[Player.P1] === "") {
 					session[Player.P1] = socket.id;
 					callback(Player.P1);
-				} else if (!session[Player.P2 || session[Player.P2] === ""]) {
+				} else if (!session[Player.P2] || session[Player.P2] === "") {
 					session[Player.P2] = socket.id;
 					callback(Player.P2);
 				} else if (
